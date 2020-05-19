@@ -15,7 +15,9 @@ int main(int argc, char **argv) {
 // The Eigen/Geometry module provides a variety of rotation and translation representations
 // 3D rotation matrix directly using Matrix3d or Matrix3f
   Matrix3d rotation_matrix = Matrix3d::Identity();
-  // The rotation vector uses AngleAxis, the underlying layer is not directly Matrix, but the operation can be treated as a matrix (because the operator is overloaded)
+  // The rotation vector uses AngleAxis, the underlying layer is not directly Matrix, 
+  //but the operation can be treated as a matrix (because the operator is overloaded)
+  
   AngleAxisd rotation_vector(M_PI / 4, Vector3d(0, 0, 1));     //Rotate 45 degrees along the Z axis
   cout.precision(3);
   cout << "rotation matrix =\n" << rotation_vector.matrix() << endl;   //convert to matrix with matrix()
@@ -39,7 +41,7 @@ int main(int argc, char **argv) {
   T.pretranslate(Vector3d(1, 3, 4));                     // Set the translation vector to (1,3,4)
   cout << "Transform matrix = \n" << T.matrix() << endl;
 
-  // 用变换矩阵进行坐标变换
+  // Use the transformation matrix for coordinate transformation
   Vector3d v_transformed = T * v;                              //Equivalent to R * v+t
   cout << "v tranformed = " << v_transformed.transpose() << endl;
 
@@ -57,6 +59,8 @@ int main(int argc, char **argv) {
   v_rotated = q * v; // Note that the math is qvq^{−1}
   cout << "(1,0,0) after rotation = " << v_rotated.transpose() << endl;
   //expressed by regular vector multiplication, it should be calculated as follows
+  cout << "q is : " << q.coeffs().transpose()<< endl;
+  cout << "q inverse is : " << q.inverse().coeffs().transpose()<< endl;
   cout << "should be equal to " << (q * Quaterniond(0, 1, 0, 0) * q.inverse()).coeffs().transpose() << endl;
 
   return 0;
