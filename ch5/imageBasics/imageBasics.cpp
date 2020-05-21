@@ -1,69 +1,69 @@
 #include <iostream>
 #include <chrono>
-
 using namespace std;
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-int main(int argc, char **argv) {
-  // 读取argv[1]指定的图像
-  cv::Mat image;
-  image = cv::imread(argv[1]); //cv::imread函数读取指定路径下的图像
-
-  // 判断图像文件是否正确读取
-  if (image.data == nullptr) { //数据不存在,可能是文件不存在
-    cerr << "文件" << argv[1] << "不存在." << endl;
-    return 0;
-  }
-
-  // 文件顺利读取, 首先输出一些基本信息
-  cout << "图像宽为" << image.cols << ",高为" << image.rows << ",通道数为" << image.channels() << endl;
-  cv::imshow("image", image);      // 用cv::imshow显示图像
-  cv::waitKey(0);                  // 暂停程序,等待一个按键输入
-
-  // 判断image的类型
-  if (image.type() != CV_8UC1 && image.type() != CV_8UC3) {
-    // 图像类型不符合要求
-    cout << "请输入一张彩色图或灰度图." << endl;
-    return 0;
-  }
-
-  // 遍历图像, 请注意以下遍历方式亦可使用于随机像素访问
-  // 使用 std::chrono 来给算法计时
-  chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
-  for (size_t y = 0; y < image.rows; y++) {
-    // 用cv::Mat::ptr获得图像的行指针
-    unsigned char *row_ptr = image.ptr<unsigned char>(y);  // row_ptr是第y行的头指针
-    for (size_t x = 0; x < image.cols; x++) {
-      // 访问位于 x,y 处的像素
-      unsigned char *data_ptr = &row_ptr[x * image.channels()]; // data_ptr 指向待访问的像素数据
-      // 输出该像素的每个通道,如果是灰度图就只有一个通道
-      for (int c = 0; c != image.channels(); c++) {
-        unsigned char data = data_ptr[c]; // data为I(x,y)第c个通道的值
-      }
+int main ( int argc, char** argv ){
+    // read the image specified by argv[1]
+    cv::Mat image;
+    image = cv::imread ( argv[1] ); //cv::imread function reads the image under the specified path
+    // Determine whether the image file is read correctly
+    if ( image.data == nullptr ) //The data does not exist, it may be that the file does not exist
+    {
+        cerr<<"file"<<argv[1]<<" does not exist."<<endl;
+        return 0;
     }
-  }
-  chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
-  chrono::duration<double> time_used = chrono::duration_cast < chrono::duration < double >> (t2 - t1);
-  cout << "遍历图像用时：" << time_used.count() << " 秒。" << endl;
+    
+    // The file is read smoothly, first output some basic information
+    cout<<" image width is "<<image.cols<<", the height is "<<image.rows<<", and the number of channels is "<<image.channels()<<endl;
+    cv::imshow ( "image", image ); // Display images with cv::imshow
+    cv::waitKey ( 0 ); // Pause the program and wait for a key input
+    // Determine the type of image
+    if ( image.type() != CV_8UC1 && image.type() != CV_8UC3 )
+    {
+        // Image type does not meet the requirements
+        cout<<" Please enter a color map or grayscale image."<<endl;
+        return 0;
+    }
 
-  // 关于 cv::Mat 的拷贝
-  // 直接赋值并不会拷贝数据
-  cv::Mat image_another = image;
-  // 修改 image_another 会导致 image 发生变化
-  image_another(cv::Rect(0, 0, 100, 100)).setTo(0); // 将左上角100*100的块置零
-  cv::imshow("image", image);
-  cv::waitKey(0);
+    // Traverse the image, please note that the following traversal method can also be used for random pixel access
+    // Use std::chrono to time the algorithm
+    chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
+    for ( size_t y=0; y<image.rows; y++ )
+    {   // Get the line pointer of the image with cv::Mat::ptr
+        unsigned char* row_ptr = image.ptr<unsigned char> ( y ); // row_ptr is the head pointer of the yth line
+        for ( size_t x=0; x<image.cols; x++ )
+        {   // access the pixel at x, y
+            unsigned char* data_ptr = &row_ptr[ x*image.channels() ]; // data_ptr points to the pixel data to be accessed
+            // output each channel of the pixel, if there is only one channel in grayscale
+            for ( int c = 0; c != image.channels(); c++ )
+            {
+                unsigned char data = data_ptr[c]; // data is the value of the cth channel of I(x,y)
+            }
+        }
+    }
+    chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
+    chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>( t2-t1 );
+    cout<<" traverses the image time: "<<time_used.count()<<" seconds."<<endl;
 
-  // 使用clone函数来拷贝数据
-  cv::Mat image_clone = image.clone();
-  image_clone(cv::Rect(0, 0, 100, 100)).setTo(255);
-  cv::imshow("image", image);
-  cv::imshow("image_clone", image_clone);
-  cv::waitKey(0);
+    // About a copy of cv::Mat
+    // Direct assignment does not copy data
+    cv::Mat image_another = image;
+    // Modify image_another will cause image to change
+    image_another ( cv::Rect ( 0,0,100,100 ) ).setTo ( 0 ); // Zero the block with the top left corner of 100*100
+    cv::imshow ( "image", image );
+    cv::waitKey ( 0 );
+    
+    // Use the clone function to copy data
+    cv::Mat image_clone = image.clone();
+    image_clone ( cv::Rect ( 0,0,100,100 ) ).setTo ( 255 );
+    cv::imshow ( "image", image );
+    cv::imshow ( "image_clone", image_clone );
+    cv::waitKey ( 0 );
 
-  // 对于图像还有很多基本的操作,如剪切,旋转,缩放等,限于篇幅就不一一介绍了,请参看OpenCV官方文档查询每个函数的调用方法.
-  cv::destroyAllWindows();
-  return 0;
+    // There are many basic operations on the image, such as cutting, rotating, scaling, etc., limited by the length of the introduction, please refer to the OpenCV official documentation to query the calling method of each function.
+    cv::destroyAllWindows();
+    return 0;
 }

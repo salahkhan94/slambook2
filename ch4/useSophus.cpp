@@ -15,8 +15,8 @@ int main(int argc, char **argv) {
   Matrix3d R = AngleAxisd(M_PI / 2, Vector3d(0, 0, 1)).toRotationMatrix();
   // Or quaternion
   Quaterniond q(R);
-  Sophus::SO3d SO3_R(R);              // Sophus::SO(3) can be constructed directly from the rotation matrix
-  Sophus::SO3d SO3_q(q);              // can also be constructed from a rotation vector
+  Sophus::SO3d SO3_R(R); // Sophus::SO(3) can be constructed directly from the rotation matrix
+  Sophus::SO3d SO3_q(q); // can also be constructed from a rotation vector
   // 二者是等价的
   cout << "SO(3) from matrix:\n" << SO3_R.matrix() << endl;
   cout << "SO(3) from quaternion:\n" << SO3_q.matrix() << endl;

@@ -9,4 +9,4 @@ include_directories(${Sophus_INCLUDE_DIRS})
 include_directories("/usr/include/eigen3")
 add_executable(useSophus useSophus.cpp)
 
-add_subdirectory(example)
+#add_subdirectory(example)
