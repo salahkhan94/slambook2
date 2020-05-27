@@ -113,7 +113,7 @@ int main(int argc, char **argv) {
   cout << "start optimization" << endl;
   chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
   optimizer.initializeOptimization();
-  optimizer.optimize(10);
+  optimizer.optimize(20);
   chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
   chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
   cout << "solve time cost = " << time_used.count() << " seconds. " << endl;
