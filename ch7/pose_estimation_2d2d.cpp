@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     cout << "usage: pose_estimation_2d2d img1 img2" << endl;
     return 1;
   }
-  //-- 读取图像
+  //-- Verify the polarity constraint
   Mat img_1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
   Mat img_2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
   assert(img_1.data && img_2.data && "Can not load images!");
