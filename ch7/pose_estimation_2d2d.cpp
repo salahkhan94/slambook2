@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace cv;
+//This program demonstrates how to estimate camera motion using 2D-2D feature matching.
 
 /****************************************************
  * 本程序演示了如何使用2D-2D的特征匹配估计相机运动
